@@ -135,7 +135,10 @@ namespace Pxoqxo.MakeVideo
 
             e.Cancel = true;
 
-            MessageBoxResult result = MessageBox.Show(this, "A video export is currently in progress. Closing the application now may result in corrupted files. Are you sure you want to force close?", "Question", MessageBoxButton.YesNoCancel);
+            MessageBoxResult result = MessageBox.Show(this,
+                                      "A video export is currently in progress. Closing the application now may result in corrupted files. Are you sure you want to force close?",
+                                      "Warning", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+
             if (result == MessageBoxResult.Yes)
             {
                 try
