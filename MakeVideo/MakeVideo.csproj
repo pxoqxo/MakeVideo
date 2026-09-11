@@ -3,21 +3,49 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<UseWPF>true</UseWPF>
-		<AssemblyName>MakeVideo</AssemblyName>
 		<RootNamespace>Pxoqxo.MakeVideo</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<Version>1.0.0.0</Version>
+		<PackageVersion>1.0.0.0</PackageVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<InformationalVersion>1.0.0.0</InformationalVersion>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		<OutputPath>..\..\publish\MakeVideo\em1.0</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+		<MyMassBuild>false</MyMassBuild>
+		<ApplicationIcon>Assets\Images\favicon.ico</ApplicationIcon>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+	<Target Name="MassBuild" Condition="'$(MyMassBuild)'!='true' And '$(Configuration)'=='Release'" AfterTargets="Build">
+		<Exec Command="dotnet build -c Release -r win-x86     -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r win-x64     -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r win-arm64   -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r osx-x64     -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r osx-arm64   -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r linux-x64   -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r linux-arm   -p:MyMassBuild=true" />
+		<Exec Command="dotnet build -c Release -r linux-arm64 -p:MyMassBuild=true" />
+	</Target>
+
 	<ItemGroup>
-	  <None Remove="Assets\Images\favicon.ico" />
-	  <None Remove="Assets\Images\favicon.jpg" />
+		<None Remove="Assets\Images\favicon.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Assets\Images\favicon.ico" />
-	  <Resource Include="Assets\Images\favicon.jpg" />
+		<Resource Include="Assets\Images\favicon.ico" />
+		<Resource Include="Assets\Images\favicon.jpg" />
 	</ItemGroup>
 
 </Project>
