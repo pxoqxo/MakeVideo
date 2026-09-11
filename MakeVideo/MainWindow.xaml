@@ -1,7 +1,8 @@
 ﻿<Window x:Class="Pxoqxo.MakeVideo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Closing="Window_Closing">
+        Closing="Window_Closing" WindowState="Maximized"
+        Title="MakeVideo.exe | em1.0" Icon="pack://application:,,,/MakeVideo;component/Assets/Images/favicon.ico">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,6 +17,7 @@
             <TextBlock TextAlignment="Center" Text="MakeVideo.exe" FontSize="40" FontWeight="Bold" Foreground="Navy"/>
             <TextBlock TextAlignment="Center" Text="Version: em1.0" FontSize="20" FontWeight="Bold"/>
             <TextBlock TextAlignment="Center" Text="created by pxoqxo." FontSize="20" FontWeight="Bold" Foreground="Tomato"/>
+            <TextBlock TextAlignment="Center" Text="Contact me: pxoqxo@atomicmail.io" FontSize="16" FontWeight="Bold" Foreground="Blue"/>
         </StackPanel>
 
         <GroupBox Grid.Row="1" Header="Input" Margin="0,5,0,5">
