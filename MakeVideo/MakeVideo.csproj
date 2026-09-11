@@ -10,4 +10,14 @@
 		<RootNamespace>Pxoqxo.MakeVideo</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <None Remove="Assets\Images\favicon.ico" />
+	  <None Remove="Assets\Images\favicon.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Assets\Images\favicon.ico" />
+	  <Resource Include="Assets\Images\favicon.jpg" />
+	</ItemGroup>
+
 </Project>
