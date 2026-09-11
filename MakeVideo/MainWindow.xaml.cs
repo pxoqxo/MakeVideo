@@ -65,67 +65,77 @@ namespace Pxoqxo.MakeVideo
             }
 
             isProcessing = true;
-            IsEnabled = false;
+            ExportBtn.IsEnabled = false;
 
             ClearMessages();
-            AddNormalMessage("Starting video export...");
+
+            string imagePath = ImagePathTb.Text;
+            string audioPath = AudioPathTb.Text;
+            string videoPath = VideoPathTb.Text;
+
+            ProcessStartInfo startInfo = new ProcessStartInfo()
+            {
+                FileName = @"C:\Users\pxoqxo\Desktop\Demo\ffmpeg.exe",
+                ArgumentList =
+                {
+                    "-y",
+                    "-loop", "1",
+                    "-i", imagePath,
+                    "-i", audioPath,
+                    "-c:v", "libx264",
+                    "-tune", "stillimage",
+                    "-pix_fmt", "yuv420p",
+                    "-c:a", "aac",
+                    "-shortest",
+                    videoPath
+                },
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+
+            process = new Process
+            {
+                StartInfo = startInfo,
+                EnableRaisingEvents = true
+            };
+
+            process.OutputDataReceived += Process_OutputDataReceived;
+            process.ErrorDataReceived += Process_ErrorDataReceived;
 
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    FileName = "your_video_exporter.exe",
-                    Arguments = "--your-export-arguments",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                process = new Process
-                {
-                    StartInfo = startInfo
-                };
+                AddMessage("Starting video export...");
                 process.Start();
-
-                string output = await process.StandardOutput.ReadToEndAsync();
-                string error = await process.StandardError.ReadToEndAsync();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
 
                 await process.WaitForExitAsync();
 
-                if (output != string.Empty)
-                {
-                    AddNormalMessage(output);
-                }
-                if (error != string.Empty)
-                {
-                    AddErrorMessage(error);
-                }
-
                 if (process.ExitCode == 0)
                 {
-                    AddSuccessMessage($"Process completed successfully with Exit Code: {process.ExitCode}");
+                    AddMessage($"Export completed successfully (Exit Code 0)");
                 }
                 else
                 {
-                    AddErrorMessage($"Process completed with errors. Exit Code: {process.ExitCode}");
+                    AddMessage($"Export failed with Exit Code {process.ExitCode}");
                 }
             }
             catch (Exception ex)
             {
-                AddErrorMessage($"Exception: {ex.Message}");
+                AddMessage($"Exception: {ex.Message}");
             }
             finally
             {
-                if (process != null)
-                {
-                    process.Dispose();
-                    process = null;
-                }
+                process.Dispose();
+                process = null;
                 isProcessing = false;
-                IsEnabled = true;
+                ExportBtn.IsEnabled = true;
             }
         }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (!isProcessing)
@@ -150,7 +160,7 @@ namespace Pxoqxo.MakeVideo
                 }
                 catch (Exception ex)
                 {
-                    AddErrorMessage($"Exception: {ex.Message}");
+                    AddMessage($"Exception: {ex.Message}");
                 }
                 finally
                 {
@@ -158,37 +168,35 @@ namespace Pxoqxo.MakeVideo
                 }
             }
         }
+        private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            AddMessage(e.Data ?? string.Empty);
+        }
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            AddMessage(e.Data ?? string.Empty);
+        }
 
-        private void AddNormalMessage(string message)
-        {
-            AddMessage(message, Brushes.White);
-        }
-        private void AddErrorMessage(string message)
-        {
-            AddMessage(message, Brushes.Red);
-        }
-        private void AddWarningMessage(string message)
-        {
-            AddMessage(message, Brushes.Blue);
-        }
-        private void AddSuccessMessage(string message)
-        {
-            AddMessage(message, Brushes.Lime);
-        }
-        private void AddMessage(string message, Brush brush)
+        private void AddMessage(string message)
         {
             if (message == string.Empty)
             {
                 return;
             }
 
-            Run run = new Run(message + Environment.NewLine)
+            Dispatcher.Invoke(() =>
             {
-                Foreground = brush
-            };
+                Run run = new Run(message + Environment.NewLine)
+                {
+                    Foreground = Brushes.White
+                };
+                ConsolePara.Inlines.Add(run);
 
-            ConsolePara.Inlines.Add(run);
-            ConsoleRtb.ScrollToEnd();
+                if (!ConsoleRtb.IsMouseOver)
+                {
+                    ConsoleRtb.ScrollToEnd();
+                }
+            });
         }
         private void ClearMessages()
         {
